@@ -9,11 +9,13 @@ mark_as_advanced(GLIB_COMPILE_RESOURCES_EXECUTABLE)
 # The type of resource to generate (header, c-file or bundle) is automatically
 # determined from TARGET file ending, if no TYPE is explicitly specified.
 # The output file is stored in the provided variable "output".
+# "xml_out" contains the variable where to output the XML path. Can be used to
+# create custom targets or doing postprocessing.
 # If you want to use preprocessing, you need to manually check the existence
 # of the tools you use. This function doesn't check this for you, it just
 # generates the XML file. glib-compile-resources will then throw a
 # warning/error.
-function(COMPILE_GRESOURCES output)
+function(COMPILE_GRESOURCES output xml_out)
     # Available options:
     # COMPRESS_ALL, NO_COMPRESS_ALL       Overrides the COMPRESS flag in all
     #                                     registered resources.
@@ -239,7 +241,8 @@ function(COMPILE_GRESOURCES output)
                        DEPENDS ${CG_RESOURCES_DEPENDENCIES}
                        WORKING_DIRECTORY ${CMAKE_BUILD_DIR})
 
-    # Set output to parent scope.
+    # Set output and XML_OUT to parent scope.
+    set(${xml_out} ${CG_XML_FILE_PATH} PARENT_SCOPE)
     set(${output} ${CG_ARG_TARGET} PARENT_SCOPE)
 
 endfunction(COMPILE_GRESOURCES)
