@@ -43,6 +43,7 @@ possible to make error-finding easier. The function is defined as follows:
 
 ```
 compile_gresources(<output>
+                   <xml_out>
                    [TYPE output_type]
                    [TARGET output_name]
                    [RESOURCES [resources...]]
@@ -58,6 +59,11 @@ compile_gresources(<output>
 
   The variable name where to set the output file names. Pass this variable to a
   target as a dependency (i.e. `add_custom_target`).
+
+- ***xml_out***
+
+  The variable name where to store the output file name of the intermediately
+  generated gresource-XML-file.
 
 - **TYPE** ***output_type***
 
@@ -168,6 +174,7 @@ set(RESOURCE_LIST
     data.xml)
 
 compile_gresources(RESOURCE_FILE
+                   XML_OUT
                    TYPE BUNDLE
                    RESOURCES ${RESOURCE_LIST})
 ```
@@ -176,14 +183,14 @@ What does this snippet do? First it sets some resource files to pack into a
 resource file. They are located in the source directory passed to CMake at
 invocation (`CMAKE_SOURCE_DIR`).
 After that we compile the resources. Means we generate a *.gresource.xml*-file
-automatically from our `RESOURCE_LIST` and create a custom command that compiles
-the generated *.gresource.xml*-file with the provided resources into a resource
-bundle. Since no specific output file is specified via **TARGET** the output
-file is placed into the `CMAKE_BINARY_DIR` with the name *resources.gresource*.
-The first argument `RESOURCE_FILE` is a variable that is filled with the output
-file name, so with *resources.gresource* inside the build directory. This
-variable is helpful to create makefile targets (or to process the output file
-differently).
+(it's path is put inside the `XML_OUT` variable) automatically from our
+`RESOURCE_LIST` and create a custom command that compiles the generated
+*.gresource.xml*-file with the provided resources into a resource bundle. Since
+no specific output file is specified via **TARGET** the output file is placed
+into the `CMAKE_BINARY_DIR` with the name *resources.gresource*. The first
+argument `RESOURCE_FILE` is a variable that is filled with the output file name,
+so with *resources.gresource* inside the build directory. This variable is
+helpful to create makefile targets (or to process the output file differently).
 
 So here comes a full *CMakeLists.txt* that creates the resources from before.
 
@@ -209,6 +216,7 @@ set(RESOURCE_LIST
 
 # Compile the resources.
 compile_gresources(RESOURCE_FILE
+                   XML_OUT
                    TYPE BUNDLE
                    RESOURCES ${RESOURCE_LIST})
 
@@ -242,6 +250,7 @@ every file the flag, just invoke `compile_gresources` with them.
 # Compile the resources. Compresses all files regardless if you specified it
 # explicitly or not.
 compile_gresources(RESOURCE_FILE
+                   XML_OUT
                    TYPE BUNDLE
                    RESOURCES ${RESOURCE_LIST}
                    COMPRESS_ALL)
