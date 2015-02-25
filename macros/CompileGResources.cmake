@@ -189,7 +189,7 @@ function(COMPILE_GRESOURCES output xml_out)
             unset(CG_TOPIXDATA_FLAG)
         endif()
 
-    endforeach(res)
+    endforeach()
 
     # Append closing nodes.
     set(CG_XML_FILE "${CG_XML_FILE}</gresource></gresources>")
@@ -229,4 +229,4 @@ function(COMPILE_GRESOURCES output xml_out)
     set(${xml_out} ${CG_XML_FILE_PATH} PARENT_SCOPE)
     set(${output} ${CG_ARG_TARGET} PARENT_SCOPE)
 
-endfunction(COMPILE_GRESOURCES)
+endfunction()
