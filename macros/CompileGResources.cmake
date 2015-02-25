@@ -64,10 +64,9 @@ function(COMPILE_GRESOURCES output xml_out)
     # Check invocation validity with the <prefix>_UNPARSED_ARGUMENTS variable.
     # If other not recognized parameters were passed, throw error.
     if (CG_ARG_UNPARSED_ARGUMENTS)
-        set(CG_WARNMSG
-            "Invocation of COMPILE_GRESOURCES with unrecognized parameters.")
-        set(CG_WARNMSG
-            "${CG_WARNMSG} Parameters are: ${CG_ARG_UNPARSED_ARGUMENTS}.")
+        set(CG_WARNMSG "Invocation of COMPILE_GRESOURCES with unrecognized")
+        set(CG_WARNMSG "${CG_WARNMSG} parameters. Parameters are:")
+        set(CG_WARNMSG "${CG_WARNMSG} ${CG_ARG_UNPARSED_ARGUMENTS}.")
         message(WARNING ${CG_WARNMSG})
     endif()
 
@@ -91,41 +90,34 @@ function(COMPILE_GRESOURCES output xml_out)
         if (CG_ARG_TARGET)
             set(CG_GENERATE_COMMAND_LINE "--generate")
         else()
-            set(CG_ERRMSG
-                "AUTO mode given, but no target specified. Can't determine")
-            set(CG_ERRMSG
-                "${CG_ERRMSG} output type. In function COMPILE_GRESOURCES.")
+            set(CG_ERRMSG "AUTO mode given, but no target specified. Can't")
+            set(CG_ERRMSG "${CG_ERRMSG} determine output type. In function")
+            set(CG_ERRMSG "${CG_ERRMSG} COMPILE_GRESOURCES.")
             message(FATAL_ERROR ${CG_ERRMSG})
         endif()
     endif()
 
     # Check flag validity.
     if (CG_ARG_COMPRESS_ALL AND CG_ARG_NO_COMPRESS_ALL)
-        set(CG_ERRMSG
-            "COMPRESS_ALL and NO_COMPRESS_ALL simultaneously set. In function")
-        set(CG_ERRMSG
-            "${CG_ERRMSG} COMPILE_GRESOURCES.")
+        set(CG_ERRMSG "COMPRESS_ALL and NO_COMPRESS_ALL simultaneously set. In")
+        set(CG_ERRMSG "${CG_ERRMSG} function COMPILE_GRESOURCES.")
         message(FATAL_ERROR ${CG_ERRMSG})
     endif()
     if (CG_ARG_STRIPBLANKS_ALL AND CG_ARG_NO_STRIPBLANKS_ALL)
-        set(CG_ERRMSG
-            "STRIPBLANKS_ALL and NO_STRIPBLANKS_ALL simultaneously set. In")
-        set(CG_ERRMSG
-            "${CG_ERRMSG} function COMPILE_GRESOURCES.")
+        set(CG_ERRMSG "STRIPBLANKS_ALL and NO_STRIPBLANKS_ALL simultaneously")
+        set(CG_ERRMSG "${CG_ERRMSG} set. In function COMPILE_GRESOURCES.")
         message(FATAL_ERROR ${CG_ERRMSG})
     endif()
     if (CG_ARG_TOPIXDATA_ALL AND CG_ARG_NO_TOPIXDATA_ALL)
-        set(CG_ERRMSG
-            "TOPIXDATA_ALL and NO_TOPIXDATA_ALL simultaneously set. In")
-        set(CG_ERRMSG
-            "${CG_ERRMSG} function COMPILE_GRESOURCES.")
+        set(CG_ERRMSG "TOPIXDATA_ALL and NO_TOPIXDATA_ALL simultaneously set.")
+        set(CG_ERRMSG "${CG_ERRMSG} In function COMPILE_GRESOURCES.")
         message(FATAL_ERROR ${CG_ERRMSG})
     endif()
 
     # Check if there are any resources.
     if (NOT CG_ARG_RESOURCES)
-        set(CG_ERRMSG
-            "No resource files to process. In function COMPILE_GRESOURCES.")
+        set(CG_ERRMSG "No resource files to process. In function")
+        set(CG_ERRMSG "${CG_ERRMSG} COMPILE_GRESOURCES.")
         message(FATAL_ERROR ${CG_ERRMSG})
     endif()
 
@@ -169,14 +161,11 @@ function(COMPILE_GRESOURCES output xml_out)
             # Check preprocess flag validity.
             if ((CG_ARG_STRIPBLANKS_ALL OR CG_STRIPBLANKS_FLAG) AND
                     (CG_ARG_TOPIXDATA_ALL OR CG_TOPIXDATA_FLAG))
-                set(CG_ERRMSG
-                    "Resource preprocessing option conflict. Tried to specify")
-                set(CG_ERRMSG
-                    "${CG_ERRMSG} both, STRIPBLANKS and TOPIXDATA. In resource")
-                set(CG_ERRMSG
-                    "${CG_ERRMSG} ${CG_RESOURCE_PATH} in function")
-                set(CG_ERRMSG
-                    "${CG_ERRMSG} COMPILE_GRESOURCES.")
+                set(CG_ERRMSG "Resource preprocessing option conflict. Tried")
+                set(CG_ERRMSG "${CG_ERRMSG} to specify both, STRIPBLANKS and")
+                set(CG_ERRMSG "${CG_ERRMSG} TOPIXDATA. In resource")
+                set(CG_ERRMSG "${CG_ERRMSG} ${CG_RESOURCE_PATH} in function")
+                set(CG_ERRMSG "${CG_ERRMSG} COMPILE_GRESOURCES.")
                 message(FATAL_ERROR ${CG_ERRMSG})
             endif()
 
@@ -192,8 +181,7 @@ function(COMPILE_GRESOURCES output xml_out)
             set(CG_RES_LINE "${CG_RES_LINE}>${CG_RESOURCE_PATH}</file>")
 
             # Append to file string.
-            set(CG_XML_FILE
-                "${CG_XML_FILE}${CG_RES_LINE}")
+            set(CG_XML_FILE "${CG_XML_FILE}${CG_RES_LINE}")
 
             # Unset variables.
             unset(CG_COMPRESSION_FLAG)
