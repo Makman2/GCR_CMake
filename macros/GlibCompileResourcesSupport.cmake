@@ -7,4 +7,5 @@ mark_as_advanced(GLIB_COMPILE_RESOURCES_EXECUTABLE)
 
 # Include the cmake files containing the functions.
 include(${GCR_CMAKE_MACRO_DIR}/CompileGResources.cmake)
+include(${GCR_CMAKE_MACRO_DIR}/GenerateGXML.cmake)
 

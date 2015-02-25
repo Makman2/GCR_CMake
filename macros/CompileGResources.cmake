@@ -1,5 +1,8 @@
 include(CMakeParseArguments)
 
+# Path to this file.
+set(GCR_CMAKE_MACRO_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 # Compiles a gresource resource file from given resource files. Automatically
 # creates the XML controlling file.
 # The type of resource to generate (header, c-file or bundle) is automatically
@@ -121,84 +124,65 @@ function(COMPILE_GRESOURCES output xml_out)
         message(FATAL_ERROR ${CG_ERRMSG})
     endif()
 
-    # Process resources and generate XML file.
-    # Begin with the XML header and header nodes.
-    set(CG_XML_FILE "<?xml version=${Q}1.0${Q} encoding=${Q}UTF-8${Q}?>")
-    set(CG_XML_FILE "${CG_XML_FILE}<gresources><gresource prefix=${Q}")
-
-    # Set the prefix for the resources. Depending on the user-override we choose
-    # the standard prefix "/" or the override.
-    if (CG_ARG_PREFIX)
-        set(CG_XML_FILE "${CG_XML_FILE}${CG_ARG_PREFIX}")
-    else()
-        set(CG_XML_FILE "${CG_XML_FILE}/")
-    endif()
-
-    set(CG_XML_FILE "${CG_XML_FILE}${Q}>")
-
-    # Process each resource.
+    # Extract all dependencies for targets from resource list.
     foreach(res ${CG_ARG_RESOURCES})
-        if ("${res}" STREQUAL "COMPRESS")
-            set(CG_COMPRESSION_FLAG ON)
-        elseif ("${res}" STREQUAL "STRIPBLANKS")
-            set(CG_STRIPBLANKS_FLAG ON)
-        elseif ("${res}" STREQUAL "TOPIXDATA")
-            set(CG_TOPIXDATA_FLAG ON)
-        else()
-            # The file name.
-            set(CG_RESOURCE_PATH "${res}")
+        if (NOT(("${res}" STREQUAL "COMPRESS") OR
+                ("${res}" STREQUAL "STRIPBLANKS") OR
+                ("${res}" STREQUAL "TOPIXDATA")))
 
-            # Append to real resource file dependency list.
-            list(APPEND CG_RESOURCES_DEPENDENCIES ${CG_RESOURCE_PATH})
-
-            # Assemble <file> node.
-            set(CG_RES_LINE "<file")
-            if ((CG_ARG_COMPRESS_ALL OR CG_COMPRESSION_FLAG) AND NOT
-                    CG_ARG_NO_COMPRESS_ALL)
-                set(CG_RES_LINE "${CG_RES_LINE} compressed=${Q}true${Q}")
-            endif()
-
-            # Check preprocess flag validity.
-            if ((CG_ARG_STRIPBLANKS_ALL OR CG_STRIPBLANKS_FLAG) AND
-                    (CG_ARG_TOPIXDATA_ALL OR CG_TOPIXDATA_FLAG))
-                set(CG_ERRMSG "Resource preprocessing option conflict. Tried")
-                set(CG_ERRMSG "${CG_ERRMSG} to specify both, STRIPBLANKS and")
-                set(CG_ERRMSG "${CG_ERRMSG} TOPIXDATA. In resource")
-                set(CG_ERRMSG "${CG_ERRMSG} ${CG_RESOURCE_PATH} in function")
-                set(CG_ERRMSG "${CG_ERRMSG} COMPILE_GRESOURCES.")
-                message(FATAL_ERROR ${CG_ERRMSG})
-            endif()
-
-            if ((CG_ARG_STRIPBLANKS_ALL OR CG_STRIPBLANKS_FLAG) AND NOT
-                    CG_ARG_NO_STRIPBLANKS_ALL)
-                set(CG_RES_LINE "${CG_RES_LINE} preprocess=")
-                set(CG_RES_LINE "${CG_RES_LINE}${Q}xml-stripblanks${Q}")
-            elseif((CG_ARG_TOPIXDATA_ALL OR CG_TOPIXDATA_FLAG) AND NOT
-                       CG_ARG_NO_TOPIXDATA_ALL)
-                set(CG_RES_LINE "${CG_RES_LINE} preprocess=${Q}to-pixdata${Q}")
-            endif()
-
-            set(CG_RES_LINE "${CG_RES_LINE}>${CG_RESOURCE_PATH}</file>")
-
-            # Append to file string.
-            set(CG_XML_FILE "${CG_XML_FILE}${CG_RES_LINE}")
-
-            # Unset variables.
-            unset(CG_COMPRESSION_FLAG)
-            unset(CG_STRIPBLANKS_FLAG)
-            unset(CG_TOPIXDATA_FLAG)
+            list(APPEND CG_RESOURCES_DEPENDENCIES "${res}")
         endif()
-
     endforeach()
 
-    # Append closing nodes.
-    set(CG_XML_FILE "${CG_XML_FILE}</gresource></gresources>")
+    # Construct .gresource.xml path.
+    set(CG_XML_FILE_PATH "${CMAKE_BINARY_DIR}/.gresource.xml")
 
-    # Use "file" function to generate XML controlling file.
-    set(CG_XML_FILE_NAME ".gresource.xml")
-    set(CG_XML_FILE_PATH "${CMAKE_BINARY_DIR}/${CG_XML_FILE_NAME}")
-    message(STATUS "Generating GResource XML file (${CG_XML_FILE_NAME}).")
-    file(WRITE ${CG_XML_FILE_PATH} ${CG_XML_FILE})
+    # Generate gresources XML target.
+    list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
+    list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_OUTPUT=${Q}${CG_XML_FILE_PATH}${Q}")
+    if(CG_ARG_COMPRESS_ALL)
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_COMPRESS_ALL")
+    endif()
+    if(CG_ARG_NO_COMPRESS_ALL)
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_NO_COMPRESS_ALL")
+    endif()
+    if(CG_ARG_STRPIBLANKS_ALL)
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_STRIPBLANKS_ALL")
+    endif()
+    if(CG_ARG_NO_STRIPBLANKS_ALL)
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_NO_STRIPBLANKS_ALL")
+    endif()
+    if(CG_ARG_TOPIXDATA_ALL)
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_TOPIXDATA_ALL")
+    endif()
+    if(CG_ARG_NO_TOPIXDATA_ALL)
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_NO_TOPIXDATA_ALL")
+    endif()
+    list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
+    list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_PREFIX=${Q}${CG_ARG_PREFIX}${Q}")
+    list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
+    list(APPEND CG_CMAKE_SCRIPT_ARGS
+         "GXML_RESOURCES=${Q}${CG_ARG_RESOURCES}${Q}")
+    list(APPEND CG_CMAKE_SCRIPT_ARGS "-P")
+    list(APPEND CG_CMAKE_SCRIPT_ARGS
+         "${Q}${GCR_CMAKE_MACRO_DIR}/BuildTargetScript.cmake${Q}")
+
+    get_filename_component(CG_XML_FILE_PATH_ONLY_NAME
+                           "${CG_XML_FILE_PATH}" NAME)
+    set(CG_XML_CUSTOM_COMMAND_COMMENT
+        "Creating gresources XML file (${CG_XML_FILE_PATH_ONLY_NAME})")
+    add_custom_command(OUTPUT ${CG_XML_FILE_PATH}
+                       COMMAND ${CMAKE_COMMAND}
+                       ARGS ${CG_CMAKE_SCRIPT_ARGS}
+                       DEPENDS ${CG_RESOURCES_DEPENDENCIES}
+                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                       COMMENT ${CG_XML_CUSTOM_COMMAND_COMMENT})
 
     # Create target manually if not set (to make sure glib-compile-resources
     # doesn't change behaviour with it's naming standards).
