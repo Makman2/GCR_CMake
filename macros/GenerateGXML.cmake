@@ -26,8 +26,8 @@ function(GENERATE_GXML xml_path)
     # RESOURCES The list of resource files. Whether absolute or relative path is
     #           equal, absolute paths are stripped down to relative ones. If the
     #           absolute path is not inside the given base directory SOURCE_DIR
-    #           or CMAKE_SOURCE_DIR (if SOURCE_DIR is not overriden), this
-    #           function aborts.
+    #           or CMAKE_CURRENT_SOURCE_DIR (if SOURCE_DIR is not overriden),
+    #           this function aborts.
     set(GXML_MULTIVALUEARGS RESOURCES)
 
     # Parse the arguments.

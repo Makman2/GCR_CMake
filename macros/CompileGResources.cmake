@@ -38,7 +38,7 @@ function(COMPILE_GRESOURCES output xml_out)
     #            relative file name in registered resources.
     # SOURCE_DIR Overrides the resources base directory to search for resources.
     #            Normally this is set to the source directory with that CMake
-    #            was invoked (CMAKE_SOURCE_DIR).
+    #            was invoked (CMAKE_CURRENT_SOURCE_DIR).
     # TARGET     Overrides the name of the output file/-s. Normally the output
     #            names from glib-compile-resources tool is taken.
     set(CG_ONEVALUEARGS TYPE PREFIX SOURCE_DIR TARGET)
@@ -47,8 +47,8 @@ function(COMPILE_GRESOURCES output xml_out)
     # RESOURCES The list of resource files. Whether absolute or relative path is
     #           equal, absolute paths are stripped down to relative ones. If the
     #           absolute path is not inside the given base directory SOURCE_DIR
-    #           or CMAKE_SOURCE_DIR (if SOURCE_DIR is not overriden), this
-    #           function aborts.
+    #           or CMAKE_CURRENT_SOURCE_DIR (if SOURCE_DIR is not overriden),
+    #           this function aborts.
     # OPTIONS   Extra command line options passed to glib-compile-resources.
     set(CG_MULTIVALUEARGS RESOURCES OPTIONS)
 
@@ -135,7 +135,7 @@ function(COMPILE_GRESOURCES output xml_out)
     endforeach()
 
     # Construct .gresource.xml path.
-    set(CG_XML_FILE_PATH "${CMAKE_BINARY_DIR}/.gresource.xml")
+    set(CG_XML_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/.gresource.xml")
 
     # Generate gresources XML target.
     list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
@@ -181,19 +181,19 @@ function(COMPILE_GRESOURCES output xml_out)
                        COMMAND ${CMAKE_COMMAND}
                        ARGS ${CG_CMAKE_SCRIPT_ARGS}
                        DEPENDS ${CG_RESOURCES_DEPENDENCIES}
-                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                        COMMENT ${CG_XML_CUSTOM_COMMAND_COMMENT})
 
     # Create target manually if not set (to make sure glib-compile-resources
     # doesn't change behaviour with it's naming standards).
     if (NOT CG_ARG_TARGET)
-        set(CG_ARG_TARGET "${CMAKE_BINARY_DIR}/resources")
+        set(CG_ARG_TARGET "${CMAKE_CURRENT_BINARY_DIR}/resources")
         set(CG_ARG_TARGET "${CG_ARG_TARGET}.${CG_TARGET_FILE_ENDING}")
     endif()
 
     # Create source directory automatically if not set.
     if (NOT CG_ARG_SOURCE_DIR)
-        set(CG_ARG_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
+        set(CG_ARG_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
     endif()
 
     # Add compilation target for resources.
