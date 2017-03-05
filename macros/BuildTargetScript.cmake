@@ -17,6 +17,8 @@
 #                         resource list.
 # GXML_PREFIX             Overrides the resource prefix that is prepended to
 #                         each relative name in registered resources.
+# GXML_CNAME              Specify the prefix used for the C identifiers in the code generated
+#                         by --generate-source and --generate-header
 # GXML_RESOURCES          The list of resource files. Whether absolute or
 #                         relative path is equal.
 
@@ -53,5 +55,6 @@ generate_gxml(${GXML_OUTPUT}
               ${GXML_STRIPBLANKS_ALL} ${GXML_NO_STRIPBLANKS_ALL}
               ${GXML_TOPIXDATA_ALL} ${GXML_NO_TOPIXDATA_ALL}
               PREFIX ${GXML_PREFIX}
+              CNAME ${GXML_CNAME}
               RESOURCES ${GXML_RESOURCES})
 
