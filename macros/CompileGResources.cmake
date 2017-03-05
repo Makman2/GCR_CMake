@@ -36,12 +36,14 @@ function(COMPILE_GRESOURCES output xml_out)
     #                     target argument.
     # PREFIX     Overrides the resource prefix that is prepended to each
     #            relative file name in registered resources.
+    # CNAME      Specify the prefix used for the C identifiers in the code generated
+    #            by --generate-source and --generate-header
     # SOURCE_DIR Overrides the resources base directory to search for resources.
     #            Normally this is set to the source directory with that CMake
     #            was invoked (CMAKE_CURRENT_SOURCE_DIR).
     # TARGET     Overrides the name of the output file/-s. Normally the output
     #            names from glib-compile-resources tool is taken.
-    set(CG_ONEVALUEARGS TYPE PREFIX SOURCE_DIR TARGET)
+    set(CG_ONEVALUEARGS TYPE PREFIX CNAME SOURCE_DIR TARGET)
 
     # Available multi-value options:
     # RESOURCES The list of resource files. Whether absolute or relative path is
@@ -77,11 +79,19 @@ function(COMPILE_GRESOURCES output xml_out)
     # or BUNDLE).
     if ("${CG_ARG_TYPE}" STREQUAL "EMBED_C")
         # EMBED_C mode, output compilable C-file.
-        set(CG_GENERATE_COMMAND_LINE "--generate-source")
+        string(APPEND CG_GENERATE_COMMAND_LINE "--generate-source")
+	if ("${CG_ARG_CNAME}" STRGREATER "")
+	    set(CG_GENERATE_COMMAND_LINE2 "--c-name" ${CG_ARG_CNAME})
+	    #string(APPEND CG_GENERATE_COMMAND_LINE "--c-name" ${CG_ARG_CNAME})
+	endif()
         set(CG_TARGET_FILE_ENDING "c")
     elseif ("${CG_ARG_TYPE}" STREQUAL "EMBED_H")
         # EMBED_H mode, output includable header file.
-        set(CG_GENERATE_COMMAND_LINE "--generate-header")
+        string(APPEND CG_GENERATE_COMMAND_LINE "--generate-header")
+	if ("${CG_ARG_CNAME}" STRGREATER "")
+	    set(CG_GENERATE_COMMAND_LINE2 "--c-name" ${CG_ARG_CNAME})
+	    #string(APPEND CG_GENERATE_COMMAND_LINE "\" --c-name ${CG_ARG_CNAME}\"")
+	endif()
         set(CG_TARGET_FILE_ENDING "h")
     elseif ("${CG_ARG_TYPE}" STREQUAL "BUNDLE")
         # BUNDLE mode, output resource bundle. Don't do anything since
@@ -135,6 +145,10 @@ function(COMPILE_GRESOURCES output xml_out)
     endforeach()
 
     # Construct .gresource.xml path.
+    #if ("${CG_ARG_CNAME}" STRGREATER "")
+    #  set(CG_XML_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CG_ARG_CNAME}.gresource.xml")
+    #else()
+    #endif()
     set(CG_XML_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/.gresource.xml")
 
     # Generate gresources XML target.
@@ -197,18 +211,29 @@ function(COMPILE_GRESOURCES output xml_out)
     endif()
 
     # Add compilation target for resources.
+    message(STATUS "calling:   ${GLIB_COMPILE_RESOURCES_EXECUTABLE}")
+    message(STATUS "arguments: \"--target=${Q}${CG_ARG_TARGET}${Q}\"")
+    message(STATUS "           \"--sourcedir=${Q}${CG_ARG_SOURCE_DIR}${Q}\"")
+    message(STATUS "           ${CG_GENERATE_COMMAND_LINE}")
+    message(STATUS "           ${CG_XML_FILE_PATH}")
+    message(STATUS "           ${OPTIONS}")
+    message(STATUS "WORKING_DIRECTORY: ${CMAKE_CURRENT_BINARY_DIR}")
+    set(CG_GLIB_COMPILE_CUSTOM_COMMAND_COMMENT
+        "Creating  ${CG_ARG_TARGET} with binary ${GLIB_COMPILE_RESOURCES_EXECUTABLE}")
     add_custom_command(OUTPUT ${CG_ARG_TARGET}
                        COMMAND ${GLIB_COMPILE_RESOURCES_EXECUTABLE}
                        ARGS
                            ${OPTIONS}
-                           "--target=${Q}${CG_ARG_TARGET}${Q}"
-                           "--sourcedir=${Q}${CG_ARG_SOURCE_DIR}${Q}"
+                           --target=${CG_ARG_TARGET}
+                           --sourcedir=${CG_ARG_SOURCE_DIR}
                            ${CG_GENERATE_COMMAND_LINE}
+			   ${CG_GENERATE_COMMAND_LINE2}
                            ${CG_XML_FILE_PATH}
+		       VERBATIM
                        MAIN_DEPENDENCY ${CG_XML_FILE_PATH}
                        DEPENDS ${CG_RESOURCES_DEPENDENCIES}
-                       WORKING_DIRECTORY ${CMAKE_BUILD_DIR})
-
+                       WORKING_DIRECTORY ${CMAKE_BUILD_DIR}
+                       COMMENT "${CG_GLIB_COMPILE_CUSTOM_COMMAND_COMMENT}")
     # Set output and XML_OUT to parent scope.
     set(${xml_out} ${CG_XML_FILE_PATH} PARENT_SCOPE)
     set(${output} ${CG_ARG_TARGET} PARENT_SCOPE)
