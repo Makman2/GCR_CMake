@@ -20,7 +20,7 @@ function(GENERATE_GXML xml_path)
     # Available one value options:
     # PREFIX     Overrides the resource prefix that is prepended to each
     #            relative file name in registered resources.
-    set(GXML_ONEVALUEARGS PREFIX)
+    set(GXML_ONEVALUEARGS PREFIX CNAME)
 
     # Available multi-value options:
     # RESOURCES The list of resource files. Whether absolute or relative path is
@@ -45,7 +45,7 @@ function(GENERATE_GXML xml_path)
     # Process resources and generate XML file.
     # Begin with the XML header and header nodes.
     set(GXML_XML_FILE "<?xml version=${Q}1.0${Q} encoding=${Q}UTF-8${Q}?>")
-    set(GXML_XML_FILE "${GXML_XML_FILE}<gresources><gresource prefix=${Q}")
+    set(GXML_XML_FILE "${GXML_XML_FILE}\n<gresources>\n  <gresource prefix=${Q}")
 
     # Set the prefix for the resources. Depending on the user-override we choose
     # the standard prefix "/" or the override.
@@ -55,7 +55,7 @@ function(GENERATE_GXML xml_path)
         set(GXML_XML_FILE "${GXML_XML_FILE}/")
     endif()
 
-    set(GXML_XML_FILE "${GXML_XML_FILE}${Q}>")
+    set(GXML_XML_FILE "${GXML_XML_FILE}${Q}>\n")
 
     # Process each resource.
     foreach(res ${GXML_ARG_RESOURCES})
@@ -73,7 +73,7 @@ function(GENERATE_GXML xml_path)
             list(APPEND GXML_RESOURCES_DEPENDENCIES ${GXML_RESOURCE_PATH})
 
             # Assemble <file> node.
-            set(GXML_RES_LINE "<file")
+            set(GXML_RES_LINE "    <file")
             if ((GXML_ARG_COMPRESS_ALL OR GXML_COMPRESSION_FLAG) AND NOT
                     GXML_ARG_NO_COMPRESS_ALL)
                 set(GXML_RES_LINE "${GXML_RES_LINE} compressed=${Q}true${Q}")
@@ -100,7 +100,7 @@ function(GENERATE_GXML xml_path)
                 set(GXML_RES_LINE "${GXML_RES_LINE}${Q}to-pixdata${Q}")
             endif()
 
-            set(GXML_RES_LINE "${GXML_RES_LINE}>${GXML_RESOURCE_PATH}</file>")
+            set(GXML_RES_LINE "${GXML_RES_LINE}>${GXML_RESOURCE_PATH}</file>\n")
 
             # Append to file string.
             set(GXML_XML_FILE "${GXML_XML_FILE}${GXML_RES_LINE}")
@@ -114,7 +114,7 @@ function(GENERATE_GXML xml_path)
     endforeach()
 
     # Append closing nodes.
-    set(GXML_XML_FILE "${GXML_XML_FILE}</gresource></gresources>")
+    set(GXML_XML_FILE "${GXML_XML_FILE}  </gresource>\n</gresources>")
 
     # Use "file" function to generate XML controlling file.
     get_filename_component(xml_path_only_name "${xml_path}" NAME)
