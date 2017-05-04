@@ -40,7 +40,7 @@ function(COMPILE_GRESOURCES output xml_out)
     #            Normally this is set to the source directory with that CMake
     #            was invoked (CMAKE_CURRENT_SOURCE_DIR).
     # TARGET     Overrides the name of the output file/-s. Normally the output
-    #            names from glib-compile-resources tool is taken.
+    #            names from the glib-compile-resources tool are taken.
     set(CG_ONEVALUEARGS TYPE PREFIX SOURCE_DIR TARGET)
 
     # Available multi-value options:
