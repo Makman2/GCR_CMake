@@ -49,6 +49,7 @@ compile_gresources(<output>
                    [RESOURCES [resources...]]
                    [OPTIONS [command_line_options...]]
                    [PREFIX resource_prefix]
+                   [C_PREFIX c_names_prefix]
                    [SOURCE_DIR resource_directory]
                    [COMPRESS_ALL] [NO_COMPRESS_ALL]
                    [STRIPBLANKS_ALL] [NO_STRIPBLANKS_ALL]
@@ -123,6 +124,10 @@ compile_gresources(<output>
   Overrides the resource prefix. The resource entries get inside the XML a
   prefix that is prepended to each resource file and represents as a whole the
   resource path.
+
+- **C_PREFIX** ***c_names_prefix***
+  Specifies the prefix used for the C identifiers in the code generated when
+  *EMBED_C* or *EMBED_H* are specified for *TYPE*.
 
 - **SOURCE_DIR** ***resource_directory***
 

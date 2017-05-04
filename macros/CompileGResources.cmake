@@ -36,12 +36,14 @@ function(COMPILE_GRESOURCES output xml_out)
     #                     target argument.
     # PREFIX     Overrides the resource prefix that is prepended to each
     #            relative file name in registered resources.
+    # C_PREFIX   Specifies the prefix used for the C identifiers in the code generated
+    #            when EMBED_C or EMBED_H are specified for TYPE.
     # SOURCE_DIR Overrides the resources base directory to search for resources.
     #            Normally this is set to the source directory with that CMake
     #            was invoked (CMAKE_CURRENT_SOURCE_DIR).
     # TARGET     Overrides the name of the output file/-s. Normally the output
     #            names from the glib-compile-resources tool are taken.
-    set(CG_ONEVALUEARGS TYPE PREFIX SOURCE_DIR TARGET)
+    set(CG_ONEVALUEARGS TYPE PREFIX C_PREFIX SOURCE_DIR TARGET)
 
     # Available multi-value options:
     # RESOURCES The list of resource files. Whether absolute or relative path is
@@ -78,16 +80,25 @@ function(COMPILE_GRESOURCES output xml_out)
     if ("${CG_ARG_TYPE}" STREQUAL "EMBED_C")
         # EMBED_C mode, output compilable C-file.
         list(APPEND CG_GENERATE_COMMAND_LINE --generate-source)
+        if (NOT "${CG_ARG_C_PREFIX}" STREQUAL "")
+            list(APPEND CG_GENERATE_COMMAND_LINE --c-name "${CG_ARG_C_PREFIX}")
+        endif()
         set(CG_TARGET_FILE_ENDING "c")
     elseif ("${CG_ARG_TYPE}" STREQUAL "EMBED_H")
         # EMBED_H mode, output includable header file.
         list(APPEND CG_GENERATE_COMMAND_LINE --generate-header)
+        if (NOT "${CG_ARG_C_OREFIX}" STREQUAL "")
+            list(APPEND CG_GENERATE_COMMAND_LINE --c-name "${CG_ARG_C_PREFIX}")
+        endif()
         set(CG_TARGET_FILE_ENDING "h")
     elseif ("${CG_ARG_TYPE}" STREQUAL "BUNDLE")
         # BUNDLE mode, output resource bundle. Don't do anything since
         # glib-compile-resources outputs a bundle when not specifying
         # something else.
         set(CG_TARGET_FILE_ENDING "gresource")
+        if (NOT "${CG_ARG_C_PREFIX}" STREQUAL "")
+            message(WARNING "Superfluously provided C_PREFIX=${CG_ARG_C_PREFIX} for BUNDLE.")
+        endif()
     else()
         # Everything else is AUTO mode, determine from target file ending.
         if (CG_ARG_TARGET)
