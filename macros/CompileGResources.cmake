@@ -201,10 +201,11 @@ function(COMPILE_GRESOURCES output xml_out)
                        COMMAND ${GLIB_COMPILE_RESOURCES_EXECUTABLE}
                        ARGS
                            ${OPTIONS}
-                           "--target=${Q}${CG_ARG_TARGET}${Q}"
-                           "--sourcedir=${Q}${CG_ARG_SOURCE_DIR}${Q}"
+                           --target ${CG_ARG_TARGET}
+                           --sourcedir ${CG_ARG_SOURCE_DIR}
                            ${CG_GENERATE_COMMAND_LINE}
                            ${CG_XML_FILE_PATH}
+                       VERBATIM
                        MAIN_DEPENDENCY ${CG_XML_FILE_PATH}
                        DEPENDS ${CG_RESOURCES_DEPENDENCIES}
                        WORKING_DIRECTORY ${CMAKE_BUILD_DIR})
