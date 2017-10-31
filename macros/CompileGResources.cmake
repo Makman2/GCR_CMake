@@ -77,11 +77,11 @@ function(COMPILE_GRESOURCES output xml_out)
     # or BUNDLE).
     if ("${CG_ARG_TYPE}" STREQUAL "EMBED_C")
         # EMBED_C mode, output compilable C-file.
-        set(CG_GENERATE_COMMAND_LINE "--generate-source")
+        list(APPEND CG_GENERATE_COMMAND_LINE --generate-source)
         set(CG_TARGET_FILE_ENDING "c")
     elseif ("${CG_ARG_TYPE}" STREQUAL "EMBED_H")
         # EMBED_H mode, output includable header file.
-        set(CG_GENERATE_COMMAND_LINE "--generate-header")
+        list(APPEND CG_GENERATE_COMMAND_LINE --generate-header)
         set(CG_TARGET_FILE_ENDING "h")
     elseif ("${CG_ARG_TYPE}" STREQUAL "BUNDLE")
         # BUNDLE mode, output resource bundle. Don't do anything since
@@ -91,7 +91,7 @@ function(COMPILE_GRESOURCES output xml_out)
     else()
         # Everything else is AUTO mode, determine from target file ending.
         if (CG_ARG_TARGET)
-            set(CG_GENERATE_COMMAND_LINE "--generate")
+            list(APPEND CG_GENERATE_COMMAND_LINE --generate)
         else()
             set(CG_ERRMSG "AUTO mode given, but no target specified. Can't")
             set(CG_ERRMSG "${CG_ERRMSG} determine output type. In function")
