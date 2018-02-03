@@ -126,6 +126,7 @@ compile_gresources(<output>
   resource path.
 
 - **C_PREFIX** ***c_names_prefix***
+
   Specifies the prefix used for the C identifiers in the code generated when
   *EMBED_C* or *EMBED_H* are specified for *TYPE*.
 
