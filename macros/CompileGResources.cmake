@@ -153,27 +153,27 @@ function(COMPILE_GRESOURCES output xml_out)
     list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_OUTPUT=${Q}${CG_XML_FILE_PATH}${Q}")
     if(CG_ARG_COMPRESS_ALL)
         list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
-        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_COMPRESS_ALL")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_COMPRESS_ALL=ON")
     endif()
     if(CG_ARG_NO_COMPRESS_ALL)
         list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
-        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_NO_COMPRESS_ALL")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_NO_COMPRESS_ALL=ON")
     endif()
     if(CG_ARG_STRPIBLANKS_ALL)
         list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
-        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_STRIPBLANKS_ALL")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_STRIPBLANKS_ALL=ON")
     endif()
     if(CG_ARG_NO_STRIPBLANKS_ALL)
         list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
-        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_NO_STRIPBLANKS_ALL")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_NO_STRIPBLANKS_ALL=ON")
     endif()
     if(CG_ARG_TOPIXDATA_ALL)
         list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
-        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_TOPIXDATA_ALL")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_TOPIXDATA_ALL=ON")
     endif()
     if(CG_ARG_NO_TOPIXDATA_ALL)
         list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
-        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_NO_TOPIXDATA_ALL")
+        list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_NO_TOPIXDATA_ALL=ON")
     endif()
     list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
     list(APPEND CG_CMAKE_SCRIPT_ARGS "GXML_PREFIX=${Q}${CG_ARG_PREFIX}${Q}")
@@ -211,7 +211,7 @@ function(COMPILE_GRESOURCES output xml_out)
     add_custom_command(OUTPUT ${CG_ARG_TARGET}
                        COMMAND ${GLIB_COMPILE_RESOURCES_EXECUTABLE}
                        ARGS
-                           ${OPTIONS}
+                           ${CG_ARG_OPTIONS}
                            --target ${CG_ARG_TARGET}
                            --sourcedir ${CG_ARG_SOURCE_DIR}
                            ${CG_GENERATE_COMMAND_LINE}
