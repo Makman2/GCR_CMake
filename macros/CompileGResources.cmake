@@ -134,6 +134,11 @@ function(COMPILE_GRESOURCES output xml_out)
         set(CG_ERRMSG "${CG_ERRMSG} COMPILE_GRESOURCES.")
         message(FATAL_ERROR ${CG_ERRMSG})
     endif()
+    
+    # Create source directory automatically if not set.
+    if (NOT CG_ARG_SOURCE_DIR)
+        set(CG_ARG_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+    endif()
 
     # Extract all dependencies for targets from resource list.
     foreach(res ${CG_ARG_RESOURCES})
@@ -141,7 +146,7 @@ function(COMPILE_GRESOURCES output xml_out)
                 ("${res}" STREQUAL "STRIPBLANKS") OR
                 ("${res}" STREQUAL "TOPIXDATA")))
 
-            list(APPEND CG_RESOURCES_DEPENDENCIES "${res}")
+            list(APPEND CG_RESOURCES_DEPENDENCIES "${CG_ARG_SOURCE_DIR}/${res}")
         endif()
     endforeach()
 
@@ -200,11 +205,6 @@ function(COMPILE_GRESOURCES output xml_out)
     if (NOT CG_ARG_TARGET)
         set(CG_ARG_TARGET "${CMAKE_CURRENT_BINARY_DIR}/resources")
         set(CG_ARG_TARGET "${CG_ARG_TARGET}.${CG_TARGET_FILE_ENDING}")
-    endif()
-
-    # Create source directory automatically if not set.
-    if (NOT CG_ARG_SOURCE_DIR)
-        set(CG_ARG_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
     endif()
 
     # Add compilation target for resources.
