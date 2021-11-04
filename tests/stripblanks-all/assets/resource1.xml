@@ -1,0 +1,12 @@
+<note>
+  <to>
+      <name>Tove</name>
+      <address>Teststreet 12</address>
+  </to>
+  <from>
+      <name>Jani</name>
+      <address>Main Ave. 102</address>
+  </from>
+  <heading>Reminder</heading>
+  <body>Don't forget me this weekend!</body>
+</note>
