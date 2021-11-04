@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><gresources><gresource prefix="/"><file compressed="true">assets/resource1.txt</file><file>assets/resource2.txt</file><file preprocess="xml-stripblanks">assets/resource3.xml</file><file preprocess="to-pixdata">assets/resource4.jpg</file><file>assets/resource5.jpg</file></gresource></gresources>

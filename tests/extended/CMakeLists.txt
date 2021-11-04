@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.0)
+
+get_filename_component(ProjectFolder ${CMAKE_CURRENT_LIST_DIR} NAME)
+string(REPLACE " " "_" ProjectFolder ${ProjectFolder})
+project("GCR_CMake-testcase-${ProjectFolder}")
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../macros)
+
+include(GlibCompileResourcesSupport)
+
+list(APPEND RESOURCES
+     COMPRESS assets/resource1.txt
+     assets/resource2.txt
+     STRIPBLANKS assets/resource3.xml
+     TOPIXDATA assets/resource4.jpg
+     assets/resource5.jpg)
+
+compile_gresources(RESOURCE_OUT
+                   XML_OUT
+                   TYPE BUNDLE
+                   RESOURCES ${RESOURCES})
+
+add_custom_target(resources
+                  ALL
+                  DEPENDS ${RESOURCE_OUT})
