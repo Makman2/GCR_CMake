@@ -119,6 +119,23 @@
   diff "build/resources.gresource" "snapshots/resources.gresource"
 }
 
+@test "STRIPBLANKS_ALL works" {
+  cd stripblanks-all
+
+  rm -rf build
+  mkdir build
+  cd build
+  cmake ..
+  make
+  cd ..
+
+  [ -f "build/resources.gresource.xml" ]
+  [ -f "build/resources.gresource" ]
+
+  diff "build/resources.gresource.xml" "snapshots/resources.gresource.xml"
+  diff "build/resources.gresource" "snapshots/resources.gresource"
+}
+
 @test "TOPIXDATA_ALL works" {
   cd topixdata-all
 
