@@ -151,7 +151,7 @@ function(COMPILE_GRESOURCES output xml_out)
     endforeach()
 
     # Construct .gresource.xml path.
-    set(CG_XML_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/.gresource.xml")
+    set(CG_XML_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/resources.gresource.xml")
 
     # Generate gresources XML target.
     list(APPEND CG_CMAKE_SCRIPT_ARGS "-D")
