@@ -205,8 +205,7 @@ function(COMPILE_GRESOURCES output xml_out)
     # Create target manually if not set (to make sure glib-compile-resources
     # doesn't change behaviour with it's naming standards).
     if (NOT CG_ARG_TARGET)
-        set(CG_ARG_TARGET "${CMAKE_CURRENT_BINARY_DIR}/resources")
-        set(CG_ARG_TARGET "${CG_ARG_TARGET}.${CG_TARGET_FILE_ENDING}")
+        set(CG_ARG_TARGET "${CMAKE_CURRENT_BINARY_DIR}/resources.${CG_TARGET_FILE_ENDING}")
     endif()
 
     # Add compilation target for resources.
