@@ -133,7 +133,7 @@ compile_gresources(<output>
 - **SOURCE_DIR** ***resource_directory***
 
   The source directory where the resource files are. If not overridden, this
-  value is set to `CMAKE_CURRENT_SOURCE_DIR`.
+  value is set to `CMAKE_CURRENT_LIST_DIR`.
 
 - **COMPRESS_ALL**, **NO_COMPRESS_ALL**
 
