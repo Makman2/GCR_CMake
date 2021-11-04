@@ -85,6 +85,40 @@
   diff "build/resources.gresource" "snapshots/resources.gresource"
 }
 
+@test "SOURCE_DIR argument works properly with relative paths" {
+  cd source-dir-relative
+
+  rm -rf build
+  mkdir build
+  cd build
+  cmake ..
+  make
+  cd ..
+
+  [ -f "build/resources.gresource.xml" ]
+  [ -f "build/resources.gresource" ]
+
+  diff "build/resources.gresource.xml" "snapshots/resources.gresource.xml"
+  diff "build/resources.gresource" "snapshots/resources.gresource"
+}
+
+@test "SOURCE_DIR argument works properly with absolute paths" {
+  cd source-dir-absolute
+
+  rm -rf build
+  mkdir build
+  cd build
+  cmake ..
+  make
+  cd ..
+
+  [ -f "build/resources.gresource.xml" ]
+  [ -f "build/resources.gresource" ]
+
+  diff "build/resources.gresource.xml" "snapshots/resources.gresource.xml"
+  diff "build/resources.gresource" "snapshots/resources.gresource"
+}
+
 @test "TOPIXDATA_ALL works" {
   cd topixdata-all
 
