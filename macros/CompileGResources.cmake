@@ -39,8 +39,7 @@ function(COMPILE_GRESOURCES output xml_out)
     # C_PREFIX   Specifies the prefix used for the C identifiers in the code generated
     #            when EMBED_C or EMBED_H are specified for TYPE.
     # SOURCE_DIR Overrides the resources base directory to search for resources.
-    #            Normally this is set to the source directory with that CMake
-    #            was invoked (CMAKE_CURRENT_SOURCE_DIR).
+    #            By default this is set to CMAKE_CURRENT_LIST_DIR.
     # TARGET     Overrides the name of the output file/-s. Normally the output
     #            names from the glib-compile-resources tool are taken.
     set(CG_ONEVALUEARGS TYPE PREFIX C_PREFIX SOURCE_DIR TARGET)
@@ -136,8 +135,11 @@ function(COMPILE_GRESOURCES output xml_out)
     endif()
 
     # If source directory is not set, default to working directory.
-    if (NOT CG_ARG_SOURCE_DIR)
-        set(CG_ARG_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+    if (CG_ARG_SOURCE_DIR)
+        get_filename_component(CG_ARG_SOURCE_DIR "${CG_ARG_SOURCE_DIR}"
+                               REALPATH BASE_DIR "${CMAKE_CURRENT_LIST_DIR}")
+    else()
+        set(CG_ARG_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}")
     endif()
 
     # Extract all dependencies for targets from resource list.
