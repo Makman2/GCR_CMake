@@ -187,7 +187,7 @@ compile_gresources(RESOURCE_FILE
 
 What does this snippet do? First it sets some resource files to pack into a
 resource file. They are located in the source directory passed to CMake at
-invocation (`CMAKE_CURENT_SOURCE_DIR`).
+invocation (`CMAKE_CURRENT_LIST_DIR`).
 After that we compile the resources. Means we generate a *.gresource.xml*-file
 (it's path is put inside the `XML_OUT` variable) automatically from our
 `RESOURCE_LIST` and create a custom command that compiles the generated
